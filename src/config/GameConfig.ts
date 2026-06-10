@@ -1,0 +1,122 @@
+export const GAME_CONFIG = {
+  world: {
+    minX: -3.2,
+    maxX: 3.2,
+    failDistanceBelowCamera: 8,
+    startingHeight: 0,
+    storyEndBiomeStartHeight: 7500,
+    storyEndTriggerHeight: 8000,
+    storyCompleteHeight: 8200
+  },
+  player: {
+    width: 0.72,
+    height: 1.12,
+    depth: 0.72,
+    gravity: -23,
+    bounceVelocity: 12.6,
+    horizontalSpeed: 8.2,
+    horizontalDamping: 15,
+    airControl: 22
+  },
+  pads: {
+    poolSize: 34,
+    visibleAhead: 24,
+    visibleBehind: 6,
+    startY: -1.3,
+    verticalSpacing: 3.05,
+    width: 1.22,
+    height: 0.2,
+    depth: 0.74,
+    maxReachableStep: 2.05,
+    firstChallengeIndex: 2,
+    minimumCenterOffset: 1.05
+  },
+  camera: {
+    followLerp: 0.075,
+    lookAheadY: 0.85,
+    zOffset: 8.4,
+    yOffset: -1.25,
+    xInfluence: 0.16,
+    fov: 54,
+    baseRiseSpeed: 0.82,
+    riseSpeedPer100m: 0.035,
+    maxRiseSpeed: 2.4
+  },
+  scoring: {
+    basePadScore: 100,
+    scoreToCoinBonusRate: 0.05,
+    comboSpeedTiers: [
+      { minCombo: 1, speed: 1.0 },
+      { minCombo: 2, speed: 1.05 },
+      { minCombo: 3, speed: 1.1 },
+      { minCombo: 4, speed: 1.15 },
+      { minCombo: 5, speed: 1.22 },
+      { minCombo: 6, speed: 1.3 },
+      { minCombo: 8, speed: 1.45 },
+      { minCombo: 11, speed: 1.6 },
+      { minCombo: 16, speed: 1.8 },
+      { minCombo: 26, speed: 2.0 },
+      { minCombo: 41, speed: 2.2 }
+    ],
+    maxSpeedMultiplier: 2.2,
+    speedSmoothing: 0.18,
+    maxHazardSpeedMultiplier: 1.2,
+    hazardBaseSpeedMultiplier: 0.9,
+    hazardSpeedScale: 0.35,
+    hazardSpawnSpeedScale: 0.05,
+    maxPlayerTimeScale: 1.7,
+    playerTimeScaleScale: 0.65,
+    cameraSpeedScale: 0.65,
+    cameraPressureSpeedScale: 0.18,
+    cameraMaxLeadY: 1.35,
+    backgroundSpeedScale: 1.0,
+    backgroundVisualMaxMultiplier: 2.2,
+    padDifficultySpeedScale: 0.45,
+    maxPadMovementMultiplier: 1.25,
+    comboResetOnHit: true,
+    dangerDistance: 1.45
+  },
+  coins: {
+    poolSize: 42,
+    coinSpawnChance: 0.35,
+    coinValue: 1,
+    coinPickupRadius: 0.6
+  },
+  padDurability: {
+    normalPadTouches: 2,
+    fragilePadTouches: 1,
+    fragilePadChance: 0.15,
+    padFadeDuration: 0.25,
+    padCrackVisualThreshold: 1
+  },
+  padTypes: {
+    movingPadStartHeight: 80,
+    movingPadChance: 0.12,
+    movingPadAmplitude: 1.05,
+    movingPadSpeed: 0.86,
+    boostPadStartHeight: 120,
+    boostPadChance: 0.08,
+    boostBounceMultiplier: 1.72,
+    boostScoreMultiplier: 2,
+    boostPulseScale: 1.18,
+    boostPulseDuration: 0.28,
+    boostCameraAssistDuration: 0.72,
+    boostCameraFollowMultiplier: 1.85,
+    movingScoreMultiplier: 1.35,
+    fragileScoreMultiplier: 1.15,
+    cursedPadStartHeight: 250,
+    cursedPadChance: 0.05,
+    cursedScoreMultiplier: 0.5,
+    cursedComboKeepRatio: 0.5
+  },
+  hazards: {
+    fireballPoolSize: 8,
+    fireballSpawnInterval: 1.35,
+    fireballSpeed: 4.15,
+    fireballRadius: 0.3,
+    fireballHitRadius: 0.8,
+    hazardTelegraphTime: 0.35,
+    knockbackX: 16,
+    knockbackY: 5.2
+  }
+} as const;
