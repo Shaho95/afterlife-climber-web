@@ -1,7 +1,8 @@
 import { Player } from './Player';
 import { PlayerStats } from './PlayerStats';
+import { GAME_CONFIG } from '../config/GameConfig';
 import { InputManager } from '../input/InputManager';
-import { damp } from '../utils/math';
+import { damp, lerp } from '../utils/math';
 
 export class PlayerController {
   constructor(
@@ -12,6 +13,14 @@ export class PlayerController {
 
   update(deltaSeconds: number, playerTimeScale = 1): void {
     const scaledDeltaSeconds = deltaSeconds * playerTimeScale;
+    if (this.input.hasDirectTouchX) {
+      const normalizedX = this.input.directTouchX ?? 0.5;
+      this.player.mesh.position.x = lerp(GAME_CONFIG.world.minX, GAME_CONFIG.world.maxX, normalizedX);
+      this.player.velocity.x = 0;
+      this.player.integrateVertical(scaledDeltaSeconds);
+      return;
+    }
+
     const desiredVelocityX = this.input.horizontal * this.stats.horizontalSpeed;
     this.player.velocity.x = damp(this.player.velocity.x, desiredVelocityX, this.stats.airControl, scaledDeltaSeconds);
     this.player.integrate(scaledDeltaSeconds);

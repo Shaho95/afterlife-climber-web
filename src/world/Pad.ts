@@ -196,7 +196,11 @@ export class Pad {
       return false;
     }
 
-    const halfPad = this.state.width * (0.5 - difficulty * 0.07);
+    const visualHalfPad =
+      this.state.width * GAME_CONFIG.pads.landingWidthMultiplier * 0.5 +
+      GAME_CONFIG.pads.landingForgivenessMargin;
+    const speedPenalty = Math.min(0.08, difficulty * 0.04);
+    const halfPad = Math.max(this.state.width * 0.5, visualHalfPad - speedPenalty);
     return x + halfWidth > this.mesh.position.x - halfPad && x - halfWidth < this.mesh.position.x + halfPad;
   }
 

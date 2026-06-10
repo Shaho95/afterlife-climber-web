@@ -131,6 +131,13 @@ export class Player {
     this.body.rotation.z = -this.velocity.x * 0.025;
   }
 
+  integrateVertical(deltaSeconds: number): void {
+    this.velocity.y += GAME_CONFIG.player.gravity * deltaSeconds;
+    this.mesh.position.y += this.velocity.y * deltaSeconds;
+    this.mesh.position.x = clamp(this.mesh.position.x, GAME_CONFIG.world.minX, GAME_CONFIG.world.maxX);
+    this.body.rotation.z = 0;
+  }
+
   bounce(velocity: number): void {
     this.velocity.y = velocity;
   }

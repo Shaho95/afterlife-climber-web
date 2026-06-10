@@ -2,8 +2,7 @@ import { clamp } from '../utils/math';
 
 export class TouchInput {
   private activePointerId: number | null = null;
-  private startX = 0;
-  private currentAxis = 0;
+  private normalizedX: number | null = null;
 
   constructor(private readonly target: HTMLElement) {
     target.addEventListener('pointerdown', this.handlePointerDown);
@@ -13,7 +12,15 @@ export class TouchInput {
   }
 
   get axis(): number {
-    return this.currentAxis;
+    return 0;
+  }
+
+  get isActive(): boolean {
+    return this.activePointerId !== null && this.normalizedX !== null;
+  }
+
+  get directNormalizedX(): number | null {
+    return this.normalizedX;
   }
 
   dispose(): void {
@@ -24,9 +31,12 @@ export class TouchInput {
   }
 
   private readonly handlePointerDown = (event: PointerEvent): void => {
+    if (event.pointerType === 'mouse') {
+      return;
+    }
+
     this.activePointerId = event.pointerId;
-    this.startX = event.clientX;
-    this.currentAxis = 0;
+    this.normalizedX = this.normalizeClientX(event.clientX);
     this.target.setPointerCapture(event.pointerId);
   };
 
@@ -35,8 +45,7 @@ export class TouchInput {
       return;
     }
 
-    const dragDistance = event.clientX - this.startX;
-    this.currentAxis = clamp(dragDistance / 90, -1, 1);
+    this.normalizedX = this.normalizeClientX(event.clientX);
   };
 
   private readonly handlePointerUp = (event: PointerEvent): void => {
@@ -45,6 +54,15 @@ export class TouchInput {
     }
 
     this.activePointerId = null;
-    this.currentAxis = 0;
+    this.normalizedX = null;
   };
+
+  private normalizeClientX(clientX: number): number {
+    const rect = this.target.getBoundingClientRect();
+    if (rect.width <= 0) {
+      return 0.5;
+    }
+
+    return clamp((clientX - rect.left) / rect.width, 0, 1);
+  }
 }

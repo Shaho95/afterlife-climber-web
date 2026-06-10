@@ -27,6 +27,8 @@ export const GAME_CONFIG = {
     width: 1.22,
     height: 0.2,
     depth: 0.74,
+    landingWidthMultiplier: 1.24,
+    landingForgivenessMargin: 0.16,
     maxReachableStep: 2.05,
     firstChallengeIndex: 2,
     minimumCenterOffset: 1.05
