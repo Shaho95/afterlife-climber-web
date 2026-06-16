@@ -18,9 +18,9 @@ export class HUD {
     this.element.className = 'hud';
     this.element.innerHTML = `
       <div class="hud-chip">
-        <span class="hud-label">Höjd</span>
+        <span class="hud-label">H&ouml;jd</span>
         <span class="hud-value" data-height>0 m</span>
-        <span class="hud-coins" data-total-coins>Coins: 0</span>
+        <span class="hud-coins" data-total-coins>Mynt: 0</span>
       </div>
       <div class="hud-chip hud-chip--score">
         <span class="hud-label">Score</span>
@@ -28,7 +28,7 @@ export class HUD {
         <span class="hud-combo" data-combo>x1</span>
         <span class="hud-speed" data-speed>Speed x1.00</span>
         <span class="hud-timescale" data-timescale>PlayerTS x1.00</span>
-        <span class="hud-run-coins" data-run-coins>Run coins: 0</span>
+        <span class="hud-run-coins" data-run-coins>Run-mynt: 0</span>
       </div>
       <div class="hud-chip">
         <span class="hud-label">Biome</span>
@@ -67,13 +67,13 @@ export class HUD {
 
   update(deltaSeconds: number, height: number, biomeName: string, score: number, combo: number, speedMultiplier: number, playerTimeScale = 1, totalCoins = 0, runCoins = 0): void {
     this.heightValue.textContent = `${Math.max(0, Math.floor(height))} m`;
-    this.coinsValue.textContent = `Coins: ${Math.max(0, Math.floor(totalCoins))}`;
+    this.coinsValue.textContent = `Mynt: ${Math.max(0, Math.floor(totalCoins))}`;
     this.scoreValue.textContent = `${Math.max(0, Math.floor(score))}`;
     this.comboValue.textContent = `x${this.formatCompactNumber(Math.max(1, combo))}`;
     this.biomeValue.textContent = biomeName;
     this.speedValue.textContent = `Speed x${speedMultiplier.toFixed(2)}`;
     this.timeScaleValue.textContent = `PlayerTS x${playerTimeScale.toFixed(2)}`;
-    this.runCoinsValue.textContent = `Run coins: ${Math.max(0, Math.floor(runCoins))}`;
+    this.runCoinsValue.textContent = `Run-mynt: ${Math.max(0, Math.floor(runCoins))}`;
     this.element.dataset.comboTier = combo >= 15 ? 'high' : combo >= 6 ? 'mid' : 'low';
     this.element.dataset.speedTier = speedMultiplier >= 2.65 ? 'redline' : speedMultiplier >= 1.9 ? 'fast' : speedMultiplier >= 1.2 ? 'quick' : 'base';
 
@@ -81,7 +81,7 @@ export class HUD {
       this.popupTimer = Math.max(0, this.popupTimer - deltaSeconds);
       this.popup.hidden = false;
       this.popup.style.opacity = `${Math.min(1, this.popupTimer * 2.4)}`;
-      this.popup.style.transform = `translate(-50%, ${-18 - (1 - this.popupTimer) * 18}px) rotate(-2deg)`;
+      this.popup.style.transform = `translate(-50%, ${-12 - (1 - this.popupTimer) * 12}px) rotate(-2deg)`;
     } else {
       this.popup.hidden = true;
     }
@@ -90,25 +90,25 @@ export class HUD {
       this.coinPopupTimer = Math.max(0, this.coinPopupTimer - deltaSeconds);
       this.coinPopup.hidden = false;
       this.coinPopup.style.opacity = `${Math.min(1, this.coinPopupTimer * 3)}`;
-      this.coinPopup.style.transform = `translate(-50%, ${-10 - (1 - this.coinPopupTimer) * 12}px) rotate(2deg)`;
+      this.coinPopup.style.transform = `translate(-50%, ${-8 - (1 - this.coinPopupTimer) * 10}px) rotate(2deg)`;
     } else {
       this.coinPopup.hidden = true;
     }
   }
 
   showLandingFeedback(scoreGained: number, combo: number): void {
-    this.popup.textContent = `+${scoreGained}  x${this.formatCompactNumber(Math.max(1, combo))}`;
-    this.popupTimer = 0.72;
+    this.popup.textContent = `+${scoreGained} x${this.formatCompactNumber(Math.max(1, combo))}`;
+    this.popupTimer = 0.56;
   }
 
   showPadFeedback(message: string): void {
     this.popup.textContent = message;
-    this.popupTimer = 0.78;
+    this.popupTimer = 0.68;
   }
 
   showCoinFeedback(coins: number): void {
     this.coinPopup.textContent = `+${Math.max(0, Math.floor(coins))}`;
-    this.coinPopupTimer = 0.58;
+    this.coinPopupTimer = 0.5;
   }
 
   resetFeedback(): void {

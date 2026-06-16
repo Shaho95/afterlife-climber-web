@@ -167,6 +167,7 @@ button {
   border-radius: 50%;
   background: var(--theme-trim);
   box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.22);
+  z-index: 1;
 }
 
 .hud-chip::before {
@@ -178,6 +179,8 @@ button {
 }
 
 .hud-label {
+  position: relative;
+  z-index: 2;
   display: block;
   color: var(--theme-accent);
   font-size: 10px;
@@ -191,6 +194,8 @@ button {
 }
 
 .hud-value {
+  position: relative;
+  z-index: 2;
   display: block;
   margin-top: 3px;
   color: var(--theme-text);
@@ -215,6 +220,8 @@ button {
 }
 
 .hud-combo {
+  position: relative;
+  z-index: 2;
   display: inline-block;
   margin-top: 4px;
   border: 2px solid var(--ink);
@@ -235,6 +242,8 @@ button {
 .hud-timescale,
 .hud-coins,
 .hud-run-coins {
+  position: relative;
+  z-index: 2;
   display: block;
   margin-top: 4px;
   color: color-mix(in srgb, var(--theme-text), transparent 15%);
@@ -266,7 +275,7 @@ button {
 .score-popup,
 .coin-popup {
   position: absolute;
-  top: 128px;
+  top: 102px;
   left: 50%;
   z-index: 6;
   border: 3px solid var(--ink);
@@ -274,10 +283,10 @@ button {
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--theme-accent), white 18%), var(--theme-trim));
   color: var(--theme-text);
-  font-size: 23px;
+  font-size: 17px;
   font-weight: 900;
   line-height: 1;
-  padding: 8px 12px;
+  padding: 6px 10px;
   text-align: center;
   text-shadow:
     2px 0 0 var(--ink),
@@ -1190,13 +1199,13 @@ button {
   }
 
   .score-popup {
-    top: 324px;
-    font-size: 18px;
+    top: 142px;
+    font-size: 14px;
   }
 
   .coin-popup {
-    top: 368px;
-    font-size: 16px;
+    top: 182px;
+    font-size: 14px;
   }
 
   .screen {

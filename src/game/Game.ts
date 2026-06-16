@@ -66,6 +66,8 @@ export class Game {
   private boostsUsedThisRun = 0;
   private bestBoostHeightGain = 0;
   private activeBoostStartHeight: number | null = null;
+  private checkpointHeight = 0;
+  private nextCheckpointHeight = 500;
 
   constructor(private readonly root: HTMLElement) {
     this.shell.className = 'game-shell';
@@ -97,7 +99,11 @@ export class Game {
       () => this.showMainMenu(),
       (language) => this.settingsScreen.update(this.settingsManager.setLanguage(language))
     );
-    this.gameOverScreen = new GameOverScreen(() => this.restartRun(), () => this.showMainMenu());
+    this.gameOverScreen = new GameOverScreen(
+      () => this.restartRun(),
+      () => this.showMainMenu(),
+      () => this.continueFromCheckpoint()
+    );
     this.victoryScreen = new VictoryScreen(() => this.restartRun(), () => this.showMainMenu());
     this.victoryFadeOverlay.className = 'victory-fade-overlay';
     this.victoryFadeOverlay.hidden = true;
@@ -141,6 +147,18 @@ export class Game {
 
   private restartRun(): void {
     this.play(this.state === 'victoryScreen');
+  }
+
+  private continueFromCheckpoint(): void {
+    if (this.checkpointHeight <= 0) {
+      return;
+    }
+
+    this.state = 'playing';
+    this.gameOverScreen.hide();
+    this.hud.show();
+    this.hintElement.hidden = false;
+    this.resetWorld(true, true, this.checkpointHeight);
   }
 
   private showMainMenu(): void {
@@ -193,6 +211,9 @@ export class Game {
     this.scoreManager.reset();
     this.coinManager.resetRun();
     this.comboManager.reset();
+    this.checkpointHeight = 0;
+    this.nextCheckpointHeight = 500;
+    this.playerController.resetStun();
     this.hud.resetFeedback();
     this.skinManager.applySelectedSkin(this.player);
     this.player.reset();
@@ -204,8 +225,8 @@ export class Game {
     this.applyThemeToShell();
   }
 
-  private resetWorld(spawnCoins = true, ignoreDebugStartHeight = false): void {
-    const startHeight = ignoreDebugStartHeight ? 0 : this.debugStartHeight;
+  private resetWorld(spawnCoins = true, ignoreDebugStartHeight = false, checkpointStartHeight?: number): void {
+    const startHeight = checkpointStartHeight ?? (ignoreDebugStartHeight ? 0 : this.debugStartHeight);
     this.height = startHeight;
     this.runElapsedSeconds = 0;
     this.runRewardClaimed = false;
@@ -215,8 +236,13 @@ export class Game {
     this.scoreManager.reset();
     this.coinManager.resetRun();
     this.comboManager.reset();
+    this.checkpointHeight = startHeight >= 500 ? Math.floor(startHeight / 500) * 500 : 0;
+    this.nextCheckpointHeight = this.checkpointHeight + 500;
+    this.playerController.resetStun();
     this.hud.resetFeedback();
-    this.applyDebugComboLandings();
+    if (checkpointStartHeight === undefined) {
+      this.applyDebugComboLandings();
+    }
     this.skinManager.applySelectedSkin(this.player);
     this.player.reset();
     this.ensurePlayerRenderable();
@@ -281,6 +307,7 @@ export class Game {
       if (worldResult.hitByHazard) {
         this.finishCurrentComboDuration();
         this.comboManager.recordHazardHit();
+        this.playerController.startHazardStun(Math.sign(this.player.velocity.x) || 1);
       }
 
       this.ensurePlayerRenderable();
@@ -300,8 +327,10 @@ export class Game {
 
       if (storyEnding && !this.storyNoticeShown) {
         this.storyNoticeShown = true;
-        this.hud.showPadFeedback('Slutet narmar sig');
+        this.hud.showPadFeedback('Slutet närmar sig');
       }
+
+      this.updateCheckpointProgress();
 
       if (this.height >= GAME_CONFIG.world.storyCompleteHeight) {
         this.startVictoryFade();
@@ -384,7 +413,8 @@ export class Game {
       totalCoins: saved.totalCoins,
       isNewHighScore: runRecord.isNewHighScore,
       isNewBestHeight: runRecord.isNewBestHeight,
-      isNewBestCombo: runRecord.isNewBestCombo
+      isNewBestCombo: runRecord.isNewBestCombo,
+      checkpointHeight: this.checkpointHeight
     };
 
     if (mode === 'complete') {
@@ -420,7 +450,7 @@ export class Game {
   private displayBiomeName(): string {
     const biomeName = this.worldManager.biomeManager.activeBiome.name;
     if (this.height >= GAME_CONFIG.world.storyEndTriggerHeight && this.height < GAME_CONFIG.world.storyCompleteHeight) {
-      return `${biomeName} - Slutet narmar sig`;
+      return `${biomeName} - Slutet närmar sig`;
     }
 
     return biomeName;
@@ -432,6 +462,18 @@ export class Game {
     this.boostsUsedThisRun = 0;
     this.bestBoostHeightGain = 0;
     this.activeBoostStartHeight = null;
+  }
+
+  private updateCheckpointProgress(): void {
+    if (this.height < this.nextCheckpointHeight || this.nextCheckpointHeight >= GAME_CONFIG.world.storyCompleteHeight) {
+      return;
+    }
+
+    while (this.height >= this.nextCheckpointHeight) {
+      this.checkpointHeight = this.nextCheckpointHeight;
+      this.nextCheckpointHeight += 500;
+    }
+    this.hud.showPadFeedback(`Checkpoint nådd: ${this.checkpointHeight}m`);
   }
 
   private updateRunStats(_deltaSeconds: number): void {

@@ -87,7 +87,7 @@ export class PadGenerator {
       const wave = Math.sin(index * 2.17) * 0.62 + Math.sin(index * 0.71) * 0.38;
       const direction = wave >= 0 ? 1 : -1;
       const step = direction * (1.15 + Math.abs(wave) * GAME_CONFIG.pads.maxReachableStep * 0.55);
-      this.reachableX = clamp(this.reachableX + step, GAME_CONFIG.world.minX + 0.8, GAME_CONFIG.world.maxX - 0.8);
+      this.reachableX = this.clampPadCenter(this.reachableX + step, false);
 
       if (Math.abs(this.reachableX) < GAME_CONFIG.pads.minimumCenterOffset) {
         this.reachableX = GAME_CONFIG.pads.minimumCenterOffset * direction;
@@ -104,9 +104,10 @@ export class PadGenerator {
 
   private createPadState(index: number, x: number, y: number): PadState {
     const type = this.pickPadType(index, y);
+    const safeX = this.clampPadCenter(x, type === PadType.MOVING);
     const fragile = type === PadType.FRAGILE;
     return {
-      x,
+      x: safeX,
       y,
       width: GAME_CONFIG.pads.width,
       height: GAME_CONFIG.pads.height,
@@ -191,9 +192,31 @@ export class PadGenerator {
       const amplitude = GAME_CONFIG.padTypes.movingPadAmplitude * (0.86 + difficulty * 0.14);
       const phase = this.padMotionPhase * GAME_CONFIG.padTypes.movingPadSpeed + pad.state.index * 0.83;
       const offset = Math.sin(phase) * amplitude;
-      const minOffset = GAME_CONFIG.world.minX + 0.65 - pad.state.x;
-      const maxOffset = GAME_CONFIG.world.maxX - 0.65 - pad.state.x;
+      const minOffset = this.safePadMinX(false) - pad.state.x;
+      const maxOffset = this.safePadMaxX(false) - pad.state.x;
       pad.setVisualOffset(clamp(offset, minOffset, maxOffset));
     }
+  }
+
+  private clampPadCenter(x: number, moving: boolean): number {
+    return clamp(x, this.safePadMinX(moving), this.safePadMaxX(moving));
+  }
+
+  private safePadMinX(moving: boolean): number {
+    const movementReserve = moving
+      ? GAME_CONFIG.padTypes.movingPadAmplitude + GAME_CONFIG.pads.movingPadEdgeSafetyMargin
+      : 0;
+    return GAME_CONFIG.world.minX + this.visualHalfPadWidth() + GAME_CONFIG.pads.padScreenMargin + GAME_CONFIG.pads.padEdgeSafetyMargin + movementReserve;
+  }
+
+  private safePadMaxX(moving: boolean): number {
+    const movementReserve = moving
+      ? GAME_CONFIG.padTypes.movingPadAmplitude + GAME_CONFIG.pads.movingPadEdgeSafetyMargin
+      : 0;
+    return GAME_CONFIG.world.maxX - this.visualHalfPadWidth() - GAME_CONFIG.pads.padScreenMargin - GAME_CONFIG.pads.padEdgeSafetyMargin - movementReserve;
+  }
+
+  private visualHalfPadWidth(): number {
+    return GAME_CONFIG.pads.width * GAME_CONFIG.pads.landingWidthMultiplier * 0.5;
   }
 }

@@ -21,15 +21,15 @@ export class MainMenuScreen {
       </div>
       <div class="menu-hub">
         <div class="menu-stats" aria-label="Sparad progression">
-          <span>Coins <b data-menu-coins>0</b></span>
+          <span>Mynt <b data-menu-coins>0</b></span>
           <span>High score <b data-menu-high-score>0</b></span>
-          <span>Best height <b data-menu-best-height>0 m</b></span>
-          <span>Best combo <b data-menu-best-combo>x1</b></span>
+          <span>B&auml;sta h&ouml;jd <b data-menu-best-height>0 m</b></span>
+          <span>B&auml;sta combo <b data-menu-best-combo>x1</b></span>
         </div>
-        <button class="primary-button menu-start-button" type="button" data-start>Starta prövningen</button>
+        <button class="primary-button menu-start-button" type="button" data-start>Starta pr&ouml;vningen</button>
         <div class="menu-actions">
           <button class="secondary-button" type="button" data-shop>Shop</button>
-          <button class="secondary-button" type="button" data-settings>Settings</button>
+          <button class="secondary-button" type="button" data-settings>Inst&auml;llningar</button>
         </div>
       </div>
       <div class="hub-ground" aria-hidden="true">

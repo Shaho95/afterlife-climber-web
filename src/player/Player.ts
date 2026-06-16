@@ -81,6 +81,18 @@ export class Player {
     visor.renderOrder = 9;
     this.mesh.add(visor);
 
+    const expressionMaterial = new THREE.MeshBasicMaterial({ color: 0x12090a, depthTest: false, side: THREE.DoubleSide });
+    const eyeLeft = new THREE.Mesh(new THREE.CircleGeometry(0.025, 10), expressionMaterial);
+    const eyeRight = new THREE.Mesh(new THREE.CircleGeometry(0.025, 10), expressionMaterial);
+    eyeLeft.position.set(-0.095, GAME_CONFIG.player.height + 0.32, 0.47);
+    eyeRight.position.set(0.095, GAME_CONFIG.player.height + 0.32, 0.47);
+    eyeLeft.renderOrder = 12;
+    eyeRight.renderOrder = 12;
+    const mouth = new THREE.Mesh(new THREE.PlaneGeometry(0.12, 0.025), expressionMaterial);
+    mouth.position.set(0, GAME_CONFIG.player.height + 0.22, 0.47);
+    mouth.renderOrder = 12;
+    this.mesh.add(eyeLeft, eyeRight, mouth);
+
     const eyeShine = new THREE.Mesh(
       new THREE.PlaneGeometry(0.07, 0.025),
       new THREE.MeshBasicMaterial({ color: 0xfff0c6, depthTest: false, side: THREE.DoubleSide })

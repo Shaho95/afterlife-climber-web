@@ -12,19 +12,19 @@ export class SettingsScreen {
     this.element.hidden = true;
     this.element.innerHTML = `
       <div class="screen-panel menu-panel settings-panel">
-        <h2 class="screen-title">Settings</h2>
-        <div class="settings-list" aria-label="Settings placeholders">
-          <span>Sound <b>On</b></span>
-          <span>Quality <b>Medium</b></span>
+        <h2 class="screen-title">Inst&auml;llningar</h2>
+        <div class="settings-list" aria-label="Inst&auml;llningar">
+          <span>Ljud <b>P&aring;</b></span>
+          <span>Kvalitet <b>Medium</b></span>
           <label class="language-setting">
-            Language
+            Spr&aring;k
             <b data-selected-language>Svenska</b>
-            <select data-language-select aria-label="Language">
+            <select data-language-select aria-label="Spr&aring;k">
               ${LANGUAGE_OPTIONS.map((language) => `<option value="${language.code}">${language.label}</option>`).join('')}
             </select>
           </label>
         </div>
-        <p class="screen-copy">Språkvalet sparas nu. Full översättning kommer senare.</p>
+        <p class="screen-copy">Spr&aring;kvalet sparas nu. Full &ouml;vers&auml;ttning kommer senare.</p>
         <button class="primary-button" type="button" data-back>Tillbaka</button>
       </div>
     `;

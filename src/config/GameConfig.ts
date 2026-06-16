@@ -9,9 +9,9 @@ export const GAME_CONFIG = {
     storyCompleteHeight: 8200
   },
   player: {
-    width: 0.72,
-    height: 1.12,
-    depth: 0.72,
+    width: 0.64,
+    height: 1.02,
+    depth: 0.64,
     gravity: -23,
     bounceVelocity: 12.6,
     horizontalSpeed: 8.2,
@@ -29,6 +29,9 @@ export const GAME_CONFIG = {
     depth: 0.74,
     landingWidthMultiplier: 1.24,
     landingForgivenessMargin: 0.16,
+    padScreenMargin: 0.12,
+    padEdgeSafetyMargin: 0.22,
+    movingPadEdgeSafetyMargin: 0.18,
     maxReachableStep: 2.05,
     firstChallengeIndex: 2,
     minimumCenterOffset: 1.05
@@ -119,6 +122,9 @@ export const GAME_CONFIG = {
     fireballHitRadius: 0.8,
     hazardTelegraphTime: 0.35,
     knockbackX: 16,
-    knockbackY: 5.2
+    knockbackY: 5.2,
+    hazardStunDuration: 0.3,
+    hazardKnockbackX: 14,
+    hazardKnockbackY: 4.8
   }
 } as const;

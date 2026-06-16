@@ -50,6 +50,32 @@ export class Pad {
 
     this.mesh = new THREE.Group();
 
+    const readabilityBackplate = new THREE.Mesh(
+      new THREE.PlaneGeometry(GAME_CONFIG.pads.width * 1.42, GAME_CONFIG.pads.height * 1.72),
+      new THREE.MeshBasicMaterial({
+        color: 0x050203,
+        transparent: true,
+        opacity: 0.52,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      })
+    );
+    readabilityBackplate.userData.padPart = 'readabilityBackplate';
+    readabilityBackplate.position.set(0, -GAME_CONFIG.pads.height * 0.08, -0.11);
+
+    const readabilityGlow = new THREE.Mesh(
+      new THREE.PlaneGeometry(GAME_CONFIG.pads.width * 1.24, GAME_CONFIG.pads.height * 0.9),
+      new THREE.MeshBasicMaterial({
+        color: 0xffd16a,
+        transparent: true,
+        opacity: 0.18,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      })
+    );
+    readabilityGlow.userData.padPart = 'readabilityGlow';
+    readabilityGlow.position.set(0, 0, -0.1);
+
     const plate = this.createRustedPlate(
       GAME_CONFIG.pads.width + 0.18,
       GAME_CONFIG.pads.height + 0.12,
@@ -65,7 +91,7 @@ export class Pad {
     shadow.position.set(0.04, -GAME_CONFIG.pads.height * 0.82, -0.06);
 
     const top = new THREE.Mesh(
-      new THREE.PlaneGeometry(GAME_CONFIG.pads.width * 0.86, GAME_CONFIG.pads.height * 0.62),
+      new THREE.PlaneGeometry(GAME_CONFIG.pads.width * 0.98, GAME_CONFIG.pads.height * 0.68),
       material
     );
     top.userData.padPart = 'top';
@@ -81,7 +107,7 @@ export class Pad {
     highlight.position.set(-GAME_CONFIG.pads.width * 0.06, GAME_CONFIG.pads.height * 0.25, 0.05);
     highlight.rotation.z = 0.015;
 
-    this.mesh.add(shadow, plate, top, darkLip, highlight);
+    this.mesh.add(readabilityBackplate, readabilityGlow, shadow, plate, top, darkLip, highlight);
 
     for (let i = 0; i < 5; i += 1) {
       const bolt = this.createBolt(i);
@@ -262,6 +288,14 @@ export class Pad {
         case 'scratchDark':
           material.color.setHex(theme.lipColor);
           break;
+        case 'readabilityGlow':
+          material.color.setHex(theme.boltColor);
+          material.opacity = 0.2;
+          break;
+        case 'readabilityBackplate':
+          material.color.setHex(0x050203);
+          material.opacity = 0.56;
+          break;
         case 'crack':
           material.color.setHex(theme.crackColor ?? 0x050203);
           break;
@@ -373,7 +407,7 @@ export class Pad {
       new THREE.ShapeGeometry(shape),
       new THREE.MeshBasicMaterial({ color: 0x090405, side: THREE.DoubleSide })
     );
-    outline.scale.set(1.05, 1.12, 1);
+    outline.scale.set(1.12, 1.2, 1);
     outline.position.z = -0.02;
 
     const fill = new THREE.Mesh(
