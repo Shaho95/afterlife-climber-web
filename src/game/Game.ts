@@ -141,6 +141,7 @@ export class Game {
     this.victoryFadeOverlay.hidden = true;
     this.victoryFadeOverlay.style.opacity = '0';
     this.hud.show();
+    this.input.showJoystick();
     this.hintElement.hidden = false;
     this.resetWorld(true, ignoreDebugStartHeight);
   }
@@ -157,6 +158,7 @@ export class Game {
     this.state = 'playing';
     this.gameOverScreen.hide();
     this.hud.show();
+    this.input.showJoystick();
     this.hintElement.hidden = false;
     this.resetWorld(true, true, this.checkpointHeight);
   }
@@ -170,6 +172,7 @@ export class Game {
     this.shopScreen.hide();
     this.settingsScreen.hide();
     this.hud.hide();
+    this.input.hideJoystick();
     this.hintElement.hidden = true;
     this.resetMenuWorld();
     this.skinManager.applySelectedSkin(this.player);
@@ -182,6 +185,7 @@ export class Game {
     this.mainMenuScreen.hide();
     this.settingsScreen.hide();
     this.hud.hide();
+    this.input.hideJoystick();
     this.hintElement.hidden = true;
     this.shopScreen.show(this.saveManager.snapshot, this.skinManager.shopItems);
   }
@@ -198,6 +202,7 @@ export class Game {
     this.mainMenuScreen.hide();
     this.shopScreen.hide();
     this.hud.hide();
+    this.input.hideJoystick();
     this.hintElement.hidden = true;
     this.settingsScreen.show(this.settingsManager.snapshot);
   }
@@ -376,6 +381,7 @@ export class Game {
     this.victoryFadeElapsed = 0;
     this.player.velocity.set(0, 0, 0);
     this.hud.hide();
+    this.input.hideJoystick();
     this.hintElement.hidden = true;
     this.victoryFadeOverlay.hidden = false;
     this.victoryFadeOverlay.style.opacity = '0';
@@ -389,6 +395,7 @@ export class Game {
     this.state = mode === 'complete' ? 'victoryScreen' : 'gameOver';
     this.runRewardClaimed = true;
     this.hud.hide();
+    this.input.hideJoystick();
     this.hintElement.hidden = true;
     const coinReward = this.coinManager.calculateTotalEarned(this.scoreManager.score);
     const runRecord = this.saveManager.recordRun({

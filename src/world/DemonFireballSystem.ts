@@ -114,8 +114,8 @@ export class DemonFireballSystem {
 
       if (fireball.hitCooldown <= 0 && dx * dx + dy * dy < hitRadius * hitRadius) {
         const side = fireball.velocity.x > 0 ? 1 : -1;
-        player.velocity.x = side * GAME_CONFIG.hazards.knockbackX;
-        player.velocity.y = Math.max(player.velocity.y, GAME_CONFIG.hazards.knockbackY);
+        player.velocity.x = side * GAME_CONFIG.hazards.hazardKnockbackX;
+        player.velocity.y = Math.max(player.velocity.y, GAME_CONFIG.hazards.hazardKnockbackY);
         fireball.hitCooldown = 1.2;
         hitPlayer = true;
         this.deactivate(fireball);

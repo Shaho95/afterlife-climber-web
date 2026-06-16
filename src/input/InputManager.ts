@@ -14,12 +14,16 @@ export class InputManager {
     return clamp(this.keyboard.axis + this.touch.axis, -1, 1);
   }
 
-  get hasDirectTouchX(): boolean {
+  get isUsingTouch(): boolean {
     return this.touch.isActive;
   }
 
-  get directTouchX(): number | null {
-    return this.touch.directNormalizedX;
+  showJoystick(): void {
+    this.touch.show();
+  }
+
+  hideJoystick(): void {
+    this.touch.hide();
   }
 
   dispose(): void {

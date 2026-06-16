@@ -16,7 +16,12 @@ export const GAME_CONFIG = {
     bounceVelocity: 12.6,
     horizontalSpeed: 8.2,
     horizontalDamping: 15,
-    airControl: 22
+    airControl: 22,
+    mobileJoystickDeadzone: 0.08,
+    mobileJoystickMaxDistance: 64,
+    mobileHorizontalSpeed: 5.8,
+    mobileAcceleration: 18,
+    mobileDeceleration: 30
   },
   pads: {
     poolSize: 34,
@@ -123,8 +128,9 @@ export const GAME_CONFIG = {
     hazardTelegraphTime: 0.35,
     knockbackX: 16,
     knockbackY: 5.2,
-    hazardStunDuration: 0.3,
-    hazardKnockbackX: 14,
-    hazardKnockbackY: 4.8
+    hazardStunDuration: 0.24,
+    hazardKnockbackX: 0.55,
+    hazardKnockbackY: 0.24,
+    hazardKnockbackDamping: 28
   }
 } as const;

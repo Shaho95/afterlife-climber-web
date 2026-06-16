@@ -2,7 +2,7 @@ import { Player } from './Player';
 import { PlayerStats } from './PlayerStats';
 import { GAME_CONFIG } from '../config/GameConfig';
 import { InputManager } from '../input/InputManager';
-import { damp, lerp } from '../utils/math';
+import { damp } from '../utils/math';
 
 export class PlayerController {
   private stunTimer = 0;
@@ -17,20 +17,20 @@ export class PlayerController {
     const scaledDeltaSeconds = deltaSeconds * playerTimeScale;
     if (this.stunTimer > 0) {
       this.stunTimer = Math.max(0, this.stunTimer - deltaSeconds);
+      this.player.velocity.x = damp(this.player.velocity.x, 0, GAME_CONFIG.hazards.hazardKnockbackDamping, scaledDeltaSeconds);
       this.player.integrate(scaledDeltaSeconds);
       return;
     }
 
-    if (this.input.hasDirectTouchX) {
-      const normalizedX = this.input.directTouchX ?? 0.5;
-      this.player.mesh.position.x = lerp(GAME_CONFIG.world.minX, GAME_CONFIG.world.maxX, normalizedX);
-      this.player.velocity.x = 0;
-      this.player.integrateVertical(scaledDeltaSeconds);
-      return;
-    }
-
-    const desiredVelocityX = this.input.horizontal * this.stats.horizontalSpeed;
-    this.player.velocity.x = damp(this.player.velocity.x, desiredVelocityX, this.stats.airControl, scaledDeltaSeconds);
+    const horizontalInput = this.input.horizontal;
+    const targetSpeed = this.input.isUsingTouch
+      ? GAME_CONFIG.player.mobileHorizontalSpeed
+      : this.stats.horizontalSpeed;
+    const smoothing = this.input.isUsingTouch
+      ? (Math.abs(horizontalInput) > 0 ? GAME_CONFIG.player.mobileAcceleration : GAME_CONFIG.player.mobileDeceleration)
+      : this.stats.airControl;
+    const desiredVelocityX = horizontalInput * targetSpeed;
+    this.player.velocity.x = damp(this.player.velocity.x, desiredVelocityX, smoothing, scaledDeltaSeconds);
     this.player.integrate(scaledDeltaSeconds);
   }
 
