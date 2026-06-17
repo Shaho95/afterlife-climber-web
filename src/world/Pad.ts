@@ -51,11 +51,11 @@ export class Pad {
     this.mesh = new THREE.Group();
 
     const readabilityBackplate = new THREE.Mesh(
-      new THREE.PlaneGeometry(GAME_CONFIG.pads.width * 1.42, GAME_CONFIG.pads.height * 1.72),
+      new THREE.PlaneGeometry(GAME_CONFIG.pads.width * 1.56, GAME_CONFIG.pads.height * 1.95),
       new THREE.MeshBasicMaterial({
         color: 0x050203,
         transparent: true,
-        opacity: 0.52,
+        opacity: 0.68,
         side: THREE.DoubleSide,
         depthWrite: false
       })
@@ -64,11 +64,11 @@ export class Pad {
     readabilityBackplate.position.set(0, -GAME_CONFIG.pads.height * 0.08, -0.11);
 
     const readabilityGlow = new THREE.Mesh(
-      new THREE.PlaneGeometry(GAME_CONFIG.pads.width * 1.24, GAME_CONFIG.pads.height * 0.9),
+      new THREE.PlaneGeometry(GAME_CONFIG.pads.width * 1.42, GAME_CONFIG.pads.height * 1.12),
       new THREE.MeshBasicMaterial({
         color: 0xffd16a,
         transparent: true,
-        opacity: 0.18,
+        opacity: 0.28,
         side: THREE.DoubleSide,
         depthWrite: false
       })
@@ -91,7 +91,7 @@ export class Pad {
     shadow.position.set(0.04, -GAME_CONFIG.pads.height * 0.82, -0.06);
 
     const top = new THREE.Mesh(
-      new THREE.PlaneGeometry(GAME_CONFIG.pads.width * 0.98, GAME_CONFIG.pads.height * 0.68),
+      new THREE.PlaneGeometry(GAME_CONFIG.pads.width * 1.04, GAME_CONFIG.pads.height * 0.74),
       material
     );
     top.userData.padPart = 'top';
@@ -290,11 +290,11 @@ export class Pad {
           break;
         case 'readabilityGlow':
           material.color.setHex(theme.boltColor);
-          material.opacity = 0.2;
+          material.opacity = 0.3;
           break;
         case 'readabilityBackplate':
           material.color.setHex(0x050203);
-          material.opacity = 0.56;
+          material.opacity = 0.7;
           break;
         case 'crack':
           material.color.setHex(theme.crackColor ?? 0x050203);

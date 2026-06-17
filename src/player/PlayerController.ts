@@ -41,8 +41,11 @@ export class PlayerController {
   startHazardStun(direction: number): void {
     const side = direction >= 0 ? 1 : -1;
     this.stunTimer = GAME_CONFIG.hazards.hazardStunDuration;
-    this.player.velocity.x = side * GAME_CONFIG.hazards.hazardKnockbackX;
-    this.player.velocity.y = Math.max(this.player.velocity.y, GAME_CONFIG.hazards.hazardKnockbackY);
+    this.player.velocity.x = side * (GAME_CONFIG.hazards.hazardKnockbackX / Math.max(0.01, this.stunTimer));
+    this.player.velocity.y = Math.max(
+      this.player.velocity.y,
+      GAME_CONFIG.hazards.hazardKnockbackY / Math.max(0.01, this.stunTimer)
+    );
   }
 
   resetStun(): void {

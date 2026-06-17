@@ -86,7 +86,12 @@ export class TouchInput {
     const offsetX = clamp(clientX - centerX, -maxDistance, maxDistance);
     const rawAxis = offsetX / maxDistance;
     const deadzone = GAME_CONFIG.player.mobileJoystickDeadzone;
-    this.currentAxis = Math.abs(rawAxis) < deadzone ? 0 : rawAxis;
+    if (Math.abs(rawAxis) < deadzone) {
+      this.currentAxis = 0;
+    } else {
+      const normalized = (Math.abs(rawAxis) - deadzone) / (1 - deadzone);
+      this.currentAxis = Math.sign(rawAxis) * Math.pow(normalized, GAME_CONFIG.player.mobileInputCurve);
+    }
     this.knob.style.transform = `translate(calc(-50% + ${offsetX}px), -50%)`;
   }
 

@@ -17,11 +17,12 @@ export const GAME_CONFIG = {
     horizontalSpeed: 8.2,
     horizontalDamping: 15,
     airControl: 22,
-    mobileJoystickDeadzone: 0.08,
-    mobileJoystickMaxDistance: 64,
-    mobileHorizontalSpeed: 5.8,
-    mobileAcceleration: 18,
-    mobileDeceleration: 30
+    mobileJoystickDeadzone: 0.12,
+    mobileJoystickMaxDistance: 65,
+    mobileInputCurve: 1.35,
+    mobileHorizontalSpeed: 5.25,
+    mobileAcceleration: 14,
+    mobileDeceleration: 36
   },
   pads: {
     poolSize: 34,
@@ -128,9 +129,9 @@ export const GAME_CONFIG = {
     hazardTelegraphTime: 0.35,
     knockbackX: 16,
     knockbackY: 5.2,
-    hazardStunDuration: 0.24,
-    hazardKnockbackX: 0.55,
-    hazardKnockbackY: 0.24,
-    hazardKnockbackDamping: 28
+    hazardStunDuration: 0.18,
+    hazardKnockbackX: 0.38,
+    hazardKnockbackY: 0.16,
+    hazardKnockbackDamping: 5
   }
 } as const;
