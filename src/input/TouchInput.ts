@@ -5,7 +5,9 @@ export class TouchInput {
   readonly element: HTMLDivElement;
   private readonly knob: HTMLSpanElement;
   private activePointerId: number | null = null;
+  private enabled = false;
   private currentAxis = 0;
+  private centerX = 0;
 
   constructor(private readonly target: HTMLElement) {
     this.element = document.createElement('div');
@@ -19,10 +21,10 @@ export class TouchInput {
     this.knob = knob;
     (target.parentElement ?? document.body).append(this.element);
 
-    this.element.addEventListener('pointerdown', this.handlePointerDown);
-    this.element.addEventListener('pointermove', this.handlePointerMove);
-    this.element.addEventListener('pointerup', this.handlePointerUp);
-    this.element.addEventListener('pointercancel', this.handlePointerUp);
+    target.addEventListener('pointerdown', this.handlePointerDown);
+    target.addEventListener('pointermove', this.handlePointerMove);
+    target.addEventListener('pointerup', this.handlePointerUp);
+    target.addEventListener('pointercancel', this.handlePointerUp);
   }
 
   get axis(): number {
@@ -34,30 +36,36 @@ export class TouchInput {
   }
 
   show(): void {
-    this.element.hidden = false;
+    this.enabled = true;
   }
 
   hide(): void {
+    this.enabled = false;
     this.reset();
-    this.element.hidden = true;
   }
 
   dispose(): void {
-    this.element.removeEventListener('pointerdown', this.handlePointerDown);
-    this.element.removeEventListener('pointermove', this.handlePointerMove);
-    this.element.removeEventListener('pointerup', this.handlePointerUp);
-    this.element.removeEventListener('pointercancel', this.handlePointerUp);
+    this.target.removeEventListener('pointerdown', this.handlePointerDown);
+    this.target.removeEventListener('pointermove', this.handlePointerMove);
+    this.target.removeEventListener('pointerup', this.handlePointerUp);
+    this.target.removeEventListener('pointercancel', this.handlePointerUp);
     this.element.remove();
   }
 
   private readonly handlePointerDown = (event: PointerEvent): void => {
-    if (event.pointerType === 'mouse') {
+    if (!this.enabled || event.pointerType === 'mouse') {
+      return;
+    }
+
+    if (!this.isInsideActivationZone(event.clientY)) {
       return;
     }
 
     event.preventDefault();
     this.activePointerId = event.pointerId;
-    this.element.setPointerCapture(event.pointerId);
+    this.centerX = event.clientX;
+    this.positionJoystick(event.clientX, event.clientY);
+    this.target.setPointerCapture(event.pointerId);
     this.updateFromPointer(event.clientX);
   };
 
@@ -79,18 +87,37 @@ export class TouchInput {
     this.reset();
   };
 
+  private isInsideActivationZone(clientY: number): boolean {
+    const viewportHeight = Math.max(1, window.innerHeight || this.target.getBoundingClientRect().height);
+    return clientY / viewportHeight >= GAME_CONFIG.player.mobileJoystickActivationZoneStart;
+  }
+
+  private positionJoystick(clientX: number, clientY: number): void {
+    const size = this.element.offsetWidth || 104;
+    const halfSize = size * 0.5;
+    const safeX = clamp(clientX, halfSize + 8, window.innerWidth - halfSize - 8);
+    const safeY = clamp(clientY, halfSize + 8, window.innerHeight - halfSize - 8);
+    this.centerX = safeX;
+    this.element.style.left = `${safeX}px`;
+    this.element.style.top = `${safeY}px`;
+    this.element.hidden = false;
+  }
+
   private updateFromPointer(clientX: number): void {
-    const rect = this.element.getBoundingClientRect();
-    const centerX = rect.left + rect.width * 0.5;
     const maxDistance = GAME_CONFIG.player.mobileJoystickMaxDistance;
-    const offsetX = clamp(clientX - centerX, -maxDistance, maxDistance);
+    const offsetX = clamp(clientX - this.centerX, -maxDistance, maxDistance);
     const rawAxis = offsetX / maxDistance;
     const deadzone = GAME_CONFIG.player.mobileJoystickDeadzone;
     if (Math.abs(rawAxis) < deadzone) {
       this.currentAxis = 0;
     } else {
       const normalized = (Math.abs(rawAxis) - deadzone) / (1 - deadzone);
-      this.currentAxis = Math.sign(rawAxis) * Math.pow(normalized, GAME_CONFIG.player.mobileInputCurve);
+      const curved = Math.pow(normalized, GAME_CONFIG.player.mobileInputCurve);
+      this.currentAxis = clamp(
+        Math.sign(rawAxis) * curved * GAME_CONFIG.player.mobileJoystickSensitivity,
+        -1,
+        1
+      );
     }
     this.knob.style.transform = `translate(calc(-50% + ${offsetX}px), -50%)`;
   }
@@ -98,6 +125,7 @@ export class TouchInput {
   private reset(): void {
     this.activePointerId = null;
     this.currentAxis = 0;
+    this.element.hidden = true;
     this.knob.style.transform = 'translate(-50%, -50%)';
   }
 }

@@ -17,9 +17,11 @@ export const GAME_CONFIG = {
     horizontalSpeed: 8.2,
     horizontalDamping: 15,
     airControl: 22,
-    mobileJoystickDeadzone: 0.12,
-    mobileJoystickMaxDistance: 65,
-    mobileInputCurve: 1.35,
+    mobileJoystickDeadzone: 0.07,
+    mobileJoystickMaxDistance: 42,
+    mobileJoystickActivationZoneStart: 0.55,
+    mobileJoystickSensitivity: 2,
+    mobileInputCurve: 1,
     mobileHorizontalSpeed: 5.25,
     mobileAcceleration: 14,
     mobileDeceleration: 36
@@ -130,8 +132,8 @@ export const GAME_CONFIG = {
     knockbackX: 16,
     knockbackY: 5.2,
     hazardStunDuration: 0.18,
-    hazardKnockbackX: 0.38,
-    hazardKnockbackY: 0.16,
+    hazardKnockbackX: 0.4,
+    hazardKnockbackY: 0.17,
     hazardKnockbackDamping: 5
   }
 } as const;
